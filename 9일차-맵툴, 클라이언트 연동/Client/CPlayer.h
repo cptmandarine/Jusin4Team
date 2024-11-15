@@ -22,5 +22,6 @@ private:
 	CONST TCHAR* m_pFrameKey;
 	PLAYERSTATE m_eCurState;
 	PLAYERSTATE m_ePreState;
+	bool m_Test;
 };
 
