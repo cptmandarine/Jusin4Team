@@ -23,22 +23,21 @@ HRESULT CStage::Ready_Scene()
 		ERR_MSG(L"Tile Img Insert Failed");
 		return E_FAIL;
 	}
+
 	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
 		L"../Texture/Stage/Player/Stand/AKIHA_AKI00_00%d.png",
-		TEX_MULTI, L"Player_Stand", L"Stand", 12)))
+		TEX_MULTI, L"Player", L"Stand", 12)))
 	{
 		ERR_MSG(L"Tile Img Insert Failed");
 		return E_FAIL;
 	}
-
 	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
 		L"../Texture/Stage/Player/Walk/AKIHA_AKI26_00%d.png",
-		TEX_MULTI, L"Player_Walk", L"Walk", 13)))
+		TEX_MULTI, L"Player", L"Walk", 13)))
 	{
 		ERR_MSG(L"Tile Img Insert Failed");
 		return E_FAIL;
 	}
-
 	CObj*	pObj = new CMyTerrain;
 	
 	if (nullptr == pObj)

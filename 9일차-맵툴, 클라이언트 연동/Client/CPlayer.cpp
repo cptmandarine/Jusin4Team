@@ -15,15 +15,13 @@ CPlayer::~CPlayer()
 
 HRESULT CPlayer::Initialize(void)
 {
-	//wstrng을 어떻게 TCHAR로 변환...?
-	//왜 wstring으로 만든 것일까?
 	m_bRight = true;
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 11;
 	m_tFrame.ullTime = GetTickCount64();
 	m_tFrame.ullSpeed = 100;
 
-	m_pObjKey = L"Player_Stand";
+	m_pObjKey = L"Player";
 	m_pFrameKey = L"Stand";
 
 	m_eCurState = CPlayer::STAND;
@@ -100,7 +98,7 @@ void CPlayer::Motion_Change()
 			m_tFrame.ullTime = GetTickCount64();
 			m_tFrame.ullSpeed = 100;
 			m_pFrameKey = L"Stand";
-			m_pObjKey = L"Player_Stand";
+			m_pObjKey = L"Player";
 			break;
 		case CPlayer::WALK:
 			m_tFrame.iFrameStart = 1;
@@ -108,7 +106,7 @@ void CPlayer::Motion_Change()
 			m_tFrame.ullTime = GetTickCount64();
 			m_tFrame.ullSpeed = 100;
 			m_pFrameKey = L"Walk";
-			m_pObjKey = L"Player_Walk";
+			m_pObjKey = L"Player";
 			break;
 		case CPlayer::END:
 			break;

@@ -198,6 +198,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CDevice.h" />
+    <ClInclude Include="CDlgTab1.h" />
+    <ClInclude Include="CDlgTab2.h" />
+    <ClInclude Include="CDlgTab3.h" />
     <ClInclude Include="CFileInfo.h" />
     <ClInclude Include="CMapTool.h" />
     <ClInclude Include="CMiniView.h" />
@@ -220,6 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDevice.cpp" />
+    <ClCompile Include="CDlgTab1.cpp" />
+    <ClCompile Include="CDlgTab2.cpp" />
+    <ClCompile Include="CDlgTab3.cpp" />
     <ClCompile Include="CFileInfo.cpp" />
     <ClCompile Include="CMapTool.cpp" />
     <ClCompile Include="CMiniView.cpp" />

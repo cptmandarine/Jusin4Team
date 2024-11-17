@@ -126,25 +126,25 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CScrollView::OnLButtonDown(nFlags, point);
 
-	CMainFrame* pMainFrm = (CMainFrame*)AfxGetMainWnd();
-	CMyForm* pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
-	CMapTool* pMapTool = &(pMyForm->m_MapTool);
+	//CMainFrame* pMainFrm = (CMainFrame*)AfxGetMainWnd();
+	//CMyForm* pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
+	//CMapTool* pMapTool = &(pMyForm->m_MapTool);
 
 
-	m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)),
-		float(point.y + GetScrollPos(1)), 0.f),
-		pMapTool->m_iDrawID);
+	//m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)),
+	//	float(point.y + GetScrollPos(1)), 0.f),
+	//	pMapTool->m_iDrawID);
 
-	// Invalidate : 윈도우에 WM_PAINT, WM_ERASEBKGND 메세지를 발생시킴. 이 때, On_Draw함수를 다시 호출
+	//// Invalidate : 윈도우에 WM_PAINT, WM_ERASEBKGND 메세지를 발생시킴. 이 때, On_Draw함수를 다시 호출
 
-	// FALSE : WM_PAINT 메시지만 발생
-	// TRUE : WM_PAINT, WM_ERASEBKGND 둘 다 발생
+	//// FALSE : WM_PAINT 메시지만 발생
+	//// TRUE : WM_PAINT, WM_ERASEBKGND 둘 다 발생
 
-	Invalidate(FALSE);		
+	//Invalidate(FALSE);		
 
-	CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
+	//CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
 
-	pMiniView->Invalidate(FALSE);
+	//pMiniView->Invalidate(FALSE);
 
 
 }
@@ -161,7 +161,7 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		CMainFrame* pMainFrm = (CMainFrame*)AfxGetMainWnd();
 		CMyForm*	pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
-		CMapTool* pMapTool = &(pMyForm->m_MapTool);
+		CMapTool* pMapTool = &(pMyForm->Get_Dig1()->m_MapTool);
 
 
 		m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)), 

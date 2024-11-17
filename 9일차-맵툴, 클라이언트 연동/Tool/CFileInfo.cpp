@@ -46,7 +46,7 @@ void CFileInfo::DirInfoExtraction(const wstring& _wstrPath, list<IMGPATH*>& _Inf
 		
 		if (Find.IsDirectory())
 		{
-			DirInfoExtraction(wstring(Find.GetFileName()), _InfoList);
+			DirInfoExtraction(wstring(Find.GetFilePath()), _InfoList);
 		}
 		else 
 		{
