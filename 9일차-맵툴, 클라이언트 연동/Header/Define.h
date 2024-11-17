@@ -8,11 +8,11 @@
 
 #define		VK_MAX			0xff
 
-#define		TILECX			130
-#define		TILECY			68
+#define		TILECX			94
+#define		TILECY			48
 
-#define		TILEX			20
-#define		TILEY			30
+#define		TILEX			35
+#define		TILEY			75
 
 #define		MIN_STR			64
 #define		MAX_STR			256

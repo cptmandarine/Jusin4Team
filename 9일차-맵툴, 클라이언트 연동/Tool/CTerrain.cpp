@@ -7,6 +7,7 @@
 CTerrain::CTerrain()
 {
 	m_vecTile.reserve(TILEX * TILEY);
+	m_BackID = 3;
 }
 
 CTerrain::~CTerrain()
@@ -46,15 +47,11 @@ int CTerrain::Get_TileIndex(const D3DXVECTOR3& vPos)
 			return index;
 	}
 
-	return -1;		// 잘못된 픽킹 처리
+	return -1;
 }
 
 bool CTerrain::Picking(const D3DXVECTOR3& vPos, const int& iIndex)
 {
-	// y = ax + b;
-
-	// 12시, 3시, 6시, 9시
-
 	float fGradient[4]
 	{
 		(TILECY / 2.f) / (TILECX / 2.f) * -1.f, 
@@ -159,7 +156,13 @@ bool CTerrain::Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex)
 
 void CTerrain::Initialize()
 {
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Stage/Terrain/Tile/Tile%d.png", TEX_MULTI, L"Terrain", L"Tile", 36)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Map/Map%d.png", TEX_MULTI, L"BackGround", L"Map", 6)))
+	{
+		AfxMessageBox(L"Tile Texture Insert Failed");
+		return;
+	}
+
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Tile%d.png", TEX_MULTI, L"Terrain", L"Tile", 5)))
 	{
 		AfxMessageBox(L"Tile Texture Insert Failed");
 		return;
@@ -177,7 +180,7 @@ void CTerrain::Initialize()
 			pTile->vPos  = {fX, fY, 0.f};
 			pTile->vSize = { (float)TILECX, (float)TILECY };
 			pTile->byOption = 0;
-			pTile->byDrawID = 3;
+			pTile->byDrawID = 0;
 
 			m_vecTile.push_back(pTile);
 		}
@@ -193,6 +196,31 @@ void CTerrain::Update()
 
 void CTerrain::Mini_Render()
 {
+	const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"BackGround", L"Map", m_BackID);
+	D3DXMATRIX	matWorld, matScale, matTrans;
+
+	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+	D3DXMatrixTranslation(&matTrans,
+		pTexInfo->tImgInfo.Width * 0.5f , // x 스크롤
+		pTexInfo->tImgInfo.Height * 0.5f , // y 스크롤
+		0.f);
+
+	matWorld = matScale * matTrans;
+
+	RECT rc{};
+	GetClientRect(m_pMainView->m_hWnd, &rc);
+
+	Set_Ratio(&matWorld, 0.3f, 0.3f);
+	float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+	float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+	CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+	CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+		nullptr,
+		&D3DXVECTOR3(fCenterX, fCenterY, 0.f),
+		nullptr,
+		D3DCOLOR_ARGB(255, 255, 255, 255));
+
+
 	for (auto& pTile : m_vecTile)
 	{
 		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", pTile->byDrawID);
@@ -225,6 +253,37 @@ void CTerrain::Render()
 {
 	TCHAR	szBuf[MIN_STR] = L"";
 	int		iIndex(0);
+
+	const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"BackGround", L"Map", m_BackID);
+	D3DXMATRIX	matWorld, matScale, matTrans;
+
+	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+	D3DXMatrixTranslation(&matTrans, 
+			pTexInfo->tImgInfo.Width * 0.5f  - m_pMainView->GetScrollPos(0), // x 스크롤
+			pTexInfo->tImgInfo.Height * 0.5f - m_pMainView->GetScrollPos(1), // y 스크롤
+		0.f);
+
+	matWorld = matScale * matTrans;
+
+	RECT rc{};
+	GetClientRect(m_pMainView->m_hWnd, &rc);
+
+	float fX = WINCX / float(rc.right - rc.left);
+	float fY = WINCY / float(rc.bottom - rc.top);
+
+	Set_Ratio(&matWorld, fX, fY);
+
+	float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+	float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+
+	CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+	CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+		nullptr,
+		&D3DXVECTOR3(fCenterX, fCenterY, 0.f),
+		nullptr,
+		D3DCOLOR_ARGB(255, 255, 255, 255));
+
 
 	for (auto& pTile : m_vecTile)
 	{
@@ -259,16 +318,12 @@ void CTerrain::Render()
 			D3DCOLOR_ARGB(255, 255, 255, 255));		
 
 		swprintf_s(szBuf, L"%d", iIndex);
-
-		/*matTrans = { 10.f, 550.f, 0.f };
-		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matTrans);*/
-
 		CDevice::Get_Instance()->Get_Font()->DrawTextW(CDevice::Get_Instance()->Get_Sprite(),
 														szBuf, 
 														lstrlen(szBuf),
 														nullptr,	// 렉트의 주소
-														0,			// 정렬 옵션(DT_CENTER)
-														D3DCOLOR_ARGB(255, 255, 255, 255));	// 출력할 폰트 색상
+														DT_CENTER,			// 정렬 옵션(DT_CENTER)
+														D3DCOLOR_ARGB(255, 0, 0, 0));	// 출력할 폰트 색상
 
 		++iIndex;
 	}	

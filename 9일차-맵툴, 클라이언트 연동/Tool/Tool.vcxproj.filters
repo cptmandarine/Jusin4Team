@@ -67,6 +67,9 @@
     <Filter Include="05. Dialog\04. PathFinder">
       <UniqueIdentifier>{9a6415e6-12d0-4578-a1a4-afd3317e68ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Dialog\00. MyForm\Tab">
+      <UniqueIdentifier>{516e9886-0a6c-4c36-8a52-cdbc933151c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tool.h">
@@ -129,6 +132,15 @@
     <ClInclude Include="CPathFinder.h">
       <Filter>05. Dialog\04. PathFinder</Filter>
     </ClInclude>
+    <ClInclude Include="CDlgTab1.h">
+      <Filter>05. Dialog\00. MyForm\Tab</Filter>
+    </ClInclude>
+    <ClInclude Include="CDlgTab2.h">
+      <Filter>05. Dialog\00. MyForm\Tab</Filter>
+    </ClInclude>
+    <ClInclude Include="CDlgTab3.h">
+      <Filter>05. Dialog\00. MyForm\Tab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tool.cpp">
@@ -181,6 +193,15 @@
     </ClCompile>
     <ClCompile Include="CPathFinder.cpp">
       <Filter>05. Dialog\04. PathFinder</Filter>
+    </ClCompile>
+    <ClCompile Include="CDlgTab1.cpp">
+      <Filter>05. Dialog\00. MyForm\Tab</Filter>
+    </ClCompile>
+    <ClCompile Include="CDlgTab2.cpp">
+      <Filter>05. Dialog\00. MyForm\Tab</Filter>
+    </ClCompile>
+    <ClCompile Include="CDlgTab3.cpp">
+      <Filter>05. Dialog\00. MyForm\Tab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
