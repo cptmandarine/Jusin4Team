@@ -87,10 +87,6 @@ void CMapTool::OnDropFiles(HDROP hDropInfo)
 	CDialog::OnDropFiles(hDropInfo);
 
 	TCHAR	szFilePath[MAX_PATH] = L"";
-
-	// DragQueryFile : 드롭된 파일의 정보를 얻어옴
-	// 0xffffffff(-1) : 파일의 개수를 반환하는 옵션
-
 	int iFileCnt = DragQueryFile(hDropInfo, 0xffffffff, nullptr, 0);
 	TCHAR		szFileName[MAX_STR] = L"";
 

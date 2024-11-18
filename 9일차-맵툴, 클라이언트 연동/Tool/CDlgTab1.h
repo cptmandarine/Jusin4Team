@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "afxdialogex.h"
 #include "CMapTool.h"
-
+#include "CBackGroundTool.h"
 // CDlgTab1 대화 상자
 
 class CDlgTab1 : public CDialogEx
@@ -18,11 +18,12 @@ public:
 #endif
 public:
 	CMapTool m_MapTool;
-
+	CBackGroundTool m_BGTool;
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
 };

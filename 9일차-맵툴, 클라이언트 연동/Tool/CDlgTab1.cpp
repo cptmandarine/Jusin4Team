@@ -29,6 +29,7 @@ void CDlgTab1::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgTab1, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CDlgTab1::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CDlgTab1::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -41,6 +42,16 @@ void CDlgTab1::OnBnClickedButton1()
 	if (nullptr == m_MapTool.GetSafeHwnd())
 	{
 		m_MapTool.Create(IDD_CMapTool);
-		m_MapTool.ShowWindow(SW_SHOW);
 	}
+	m_MapTool.ShowWindow(SW_SHOW);
+}
+
+
+void CDlgTab1::OnBnClickedButton2()
+{
+	if (nullptr == m_BGTool.GetSafeHwnd())
+	{
+		m_BGTool.Create(IDD_CBackGroundTool);
+	}
+	m_BGTool.ShowWindow(SW_SHOW);
 }
