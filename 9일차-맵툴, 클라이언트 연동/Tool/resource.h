@@ -11,6 +11,7 @@
 #define IDD_CMapTool                    312
 #define IDD_CPathFinder                 313
 #define IDD_DIALOG_TAB1                 314
+#define IDD_CBackGroundTool             315
 #define IDD_DIALOG_TAB2                 316
 #define IDD_DIALOG1                     318
 #define IDD_DIALOG_TAB3                 318
@@ -29,8 +30,11 @@
 #define IDC_RADIO2                      1011
 #define IDC_RADIO3                      1012
 #define IDC_CHECK1                      1013
+#define IDC_RADIO4                      1013
 #define IDC_CHECK2                      1014
+#define IDC_RADIO5                      1014
 #define IDC_CHECK3                      1015
+#define IDC_RADIO6                      1015
 #define IDC_BUTTON4                     1016
 #define IDC_EDIT6                       1017
 #define IDC_BUTTON5                     1018
@@ -42,9 +46,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        320
+#define _APS_NEXT_RESOURCE_VALUE        321
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1021
-#define _APS_NEXT_SYMED_VALUE           314
+#define _APS_NEXT_SYMED_VALUE           316
 #endif
 #endif

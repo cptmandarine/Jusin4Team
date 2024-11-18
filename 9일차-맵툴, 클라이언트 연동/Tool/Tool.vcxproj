@@ -197,6 +197,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CBackGroundTool.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CDlgTab1.h" />
     <ClInclude Include="CDlgTab2.h" />
@@ -222,6 +223,7 @@
     <ClInclude Include="ToolView.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CBackGroundTool.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CDlgTab1.cpp" />
     <ClCompile Include="CDlgTab2.cpp" />

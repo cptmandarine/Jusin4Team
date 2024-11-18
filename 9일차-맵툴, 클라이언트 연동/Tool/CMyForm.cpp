@@ -101,17 +101,7 @@ void CMyForm::OnInitialUpdate()
 //
 //	m_UnitTool.ShowWindow(SW_SHOW);
 //}
-//
-//
-//void CMyForm::OnMapTool()
-//{
-//	if (nullptr == m_MapTool.GetSafeHwnd())
-//		m_MapTool.Create(IDD_CMapTool);
-//
-//	m_MapTool.ShowWindow(SW_SHOW);
-//}
-//
-//
+
 //void CMyForm::OnPathFinder()
 //{
 //	if (nullptr == m_PathFinder.GetSafeHwnd())
