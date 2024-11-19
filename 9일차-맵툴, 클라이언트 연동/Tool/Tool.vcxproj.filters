@@ -79,6 +79,9 @@
     <Filter Include="05. Dialog\06.DecoTool">
       <UniqueIdentifier>{dee3aac5-08e7-4dfc-8f87-ef2c71032540}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Etc\Unit">
+      <UniqueIdentifier>{80e0ad5c-bce4-47e5-b6d8-4f57d99328ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tool.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="CDecoTool.h">
       <Filter>05. Dialog\06.DecoTool</Filter>
     </ClInclude>
+    <ClInclude Include="CUnit.h">
+      <Filter>04. Etc\Unit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tool.cpp">
@@ -229,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="CDecoTool.cpp">
       <Filter>05. Dialog\06.DecoTool</Filter>
+    </ClCompile>
+    <ClCompile Include="CUnit.cpp">
+      <Filter>04. Etc\Unit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

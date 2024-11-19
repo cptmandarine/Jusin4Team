@@ -214,6 +214,7 @@
     <ClInclude Include="CTerrain.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureMgr.h" />
+    <ClInclude Include="CUnit.h" />
     <ClInclude Include="CUnittool.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="CTerrain.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureMgr.cpp" />
+    <ClCompile Include="CUnit.cpp" />
     <ClCompile Include="CUnittool.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">

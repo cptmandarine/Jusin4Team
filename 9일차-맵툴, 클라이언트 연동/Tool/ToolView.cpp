@@ -104,7 +104,9 @@ void CToolView::OnInitialUpdate()
 	m_pDeco->Initialize();
 	m_pDeco->Set_MainView(this);
 
-
+	m_pUnit = new CUnit;
+	m_pUnit->Initialize();
+	m_pUnit->Set_MainView(this);
 }
 
 
@@ -121,6 +123,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 
 	m_pTerrain->Render();
 	m_pDeco->Render();
+	m_pUnit->Render();
 
 	CDevice::Get_Instance()->Render_End();
 
@@ -148,11 +151,16 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 		CMapTool* pMapTool = &(pMyForm->Get_Dig1()->m_MapTool);
 		CDecoTool* pDecoTool = &(pMyForm->Get_Dig1()->m_DecoTool);
-		//크흠...
+		CUnittool* pUnitTool = &(pMyForm->Get_Dig2()->m_CUnitTool);
+		
 
 
 		pDecoTool->Set_MainView(this);
 		pDecoTool->Set_pDeco(m_pDeco);
+		
+		pUnitTool->Set_MainView(this);
+		pUnitTool->Set_pUnit(m_pUnit);
+
 		m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)),
 			float(point.y + GetScrollPos(1)),
 			0.f),
@@ -166,12 +174,18 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 				0.f));
 		D3DXVECTOR3 vDecoPos = m_pTerrain->Get_VecPos(iIdx);
 
-
-		if (m_pDeco->Create_Deco(vDecoPos, pDecoTool->m_iDrawID, iIdx))
+		if (pMyForm->Get_Dig1()->IsWindowVisible())
 		{
-			TCHAR szBuf[MAX_STR];
-			swprintf_s(szBuf, L"DECO%d-%d", pDecoTool->m_iDrawID, iIdx);
-			pDecoTool->Add_ControlList(szBuf);
+			if (m_pDeco->Create_Deco(vDecoPos, pDecoTool->m_iDrawID, iIdx))
+			{
+				TCHAR szBuf[MAX_STR];
+				swprintf_s(szBuf, L"DECO%d-%d", pDecoTool->m_iDrawID, iIdx);
+				pDecoTool->Add_ControlList(szBuf);
+			}
+		}
+		if (pMyForm->Get_Dig2()->IsWindowVisible())
+		{
+			m_pUnit->Create_Unit(vDecoPos, pUnitTool->m_iDrawID, iIdx);
 		}
 
 		Invalidate(FALSE);

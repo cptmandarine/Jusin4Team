@@ -145,7 +145,10 @@ void CDecoTool::OnListBox()
 
 void CDecoTool::Add_ControlList(wstring wstr)
 {
-	if (!m_ControllistBox.m_hWnd) return;
+	if (!m_ControllistBox.m_hWnd)
+	{
+		return;
+	}
 
 	UpdateData(TRUE);
 	m_ControllistBox.AddString(wstr.c_str());
