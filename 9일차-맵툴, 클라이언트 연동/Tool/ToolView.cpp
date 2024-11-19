@@ -82,11 +82,11 @@ void CToolView::OnInitialUpdate()
 
 	// SetWindowPos : 매개 변수대로 새롭게 윈도우 위치와 크기를 조정하는 함수
 	// SetWindowPos(배치할 윈도우의 Z순서에 대한 포인터, X좌표, Y좌표, 가로 크기, 세로 크기, 배치할 윈도우의 크기 및 위치 지정 옵션)
-	
+
 	pMainFrm->SetWindowPos(nullptr, // 순서 변경 안하겠음
-							0, 0, 
-							int(WINCX + fRowFrm), int(WINCY + fColFrm), 
-							SWP_NOZORDER); // 현재 순서를 유지하는 옵션
+		0, 0,
+		int(WINCX + fRowFrm), int(WINCY + fColFrm),
+		SWP_NOZORDER); // 현재 순서를 유지하는 옵션
 
 
 	g_hWnd = m_hWnd;
@@ -95,7 +95,7 @@ void CToolView::OnInitialUpdate()
 	{
 		AfxMessageBox(L"Device Create Failed");
 		return;
-	}		
+	}
 	m_pTerrain = new CTerrain;
 	m_pTerrain->Initialize();
 	m_pTerrain->Set_MainView(this);
@@ -104,7 +104,7 @@ void CToolView::OnInitialUpdate()
 	m_pDeco->Initialize();
 	m_pDeco->Set_MainView(this);
 
-	
+
 }
 
 
@@ -115,11 +115,11 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	CToolDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
-		return;	
+		return;
 
 	CDevice::Get_Instance()->Render_Begin();
 
-	m_pTerrain->Render();	
+	m_pTerrain->Render();
 	m_pDeco->Render();
 
 	CDevice::Get_Instance()->Render_End();
@@ -144,20 +144,19 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		CMainFrame* pMainFrm = (CMainFrame*)AfxGetMainWnd();
-		CMyForm*	pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
+		CMyForm* pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
+
 		CMapTool* pMapTool = &(pMyForm->Get_Dig1()->m_MapTool);
 		CDecoTool* pDecoTool = &(pMyForm->Get_Dig1()->m_DecoTool);
 		//크흠...
+
+
 		pDecoTool->Set_MainView(this);
-
 		pDecoTool->Set_pDeco(m_pDeco);
-
-		m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)), 
-											float(point.y + GetScrollPos(1)),
-											0.f), 
-											pMapTool->m_iDrawID);
-
-
+		m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)),
+			float(point.y + GetScrollPos(1)),
+			0.f),
+			pMapTool->m_iDrawID);
 		//m_pTerrain에서 타일의 인덱스를 불러와서
 		//m_pDeco로 전달..
 		int iIdx = m_pTerrain->Get_TileIndex(
@@ -165,8 +164,9 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 				float(point.x + GetScrollPos(0)),
 				float(point.y + GetScrollPos(1)),
 				0.f));
-
 		D3DXVECTOR3 vDecoPos = m_pTerrain->Get_VecPos(iIdx);
+
+
 		if (m_pDeco->Create_Deco(vDecoPos, pDecoTool->m_iDrawID, iIdx))
 		{
 			TCHAR szBuf[MAX_STR];

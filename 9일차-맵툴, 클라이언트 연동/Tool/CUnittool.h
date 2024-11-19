@@ -22,34 +22,26 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnListBox();
-	afx_msg void OnAdd();
 	afx_msg void OnDestroy();
-	afx_msg void OnDelete();
-	afx_msg void OnSearch();
+	virtual BOOL OnInitDialog();
+	afx_msg void OnDropFiles(HDROP hDropInfo);
+	afx_msg void OnSave();
+	afx_msg void OnLoad();
+	afx_msg void OnListBox();
 
 public: // value
-	CString m_strTest;
-	CString m_strResult;
-
-	CString m_strName;
+	CString m_strUnitName;
 	int m_iAttack;
 	int m_iHp;
 
-	CString m_strFindName;
-
 
 public: // control
+	CButton m_BitMap;
 	CListBox m_ListBox;
-	CButton m_Radio[3];
-	CButton m_Check[3];
-	CButton m_Bitmap;
+	CStatic m_Picture;
 
 public:
+	int m_iDrawID;
+	map<CString, CImage*>		m_MapPngImage;
 	map<CString, UNITDATA*>		m_mapUnitData;
-
-	virtual BOOL OnInitDialog();
-	afx_msg void OnSave();
-	afx_msg void OnLoad();
 };

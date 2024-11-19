@@ -5,6 +5,7 @@
 #include "Tool.h"
 #include "afxdialogex.h"
 #include "CUnittool.h"
+#include "CFileInfo.h"
 
 
 // CUnittool 대화 상자
@@ -13,12 +14,10 @@ IMPLEMENT_DYNAMIC(CUnittool, CDialog)
 
 CUnittool::CUnittool(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_CUnittool, pParent)
-	, m_strTest(_T(""))
-	, m_strResult(_T(""))
-	, m_strName(_T(""))
+	, m_strUnitName(_T(""))
 	, m_iAttack(0)
 	, m_iHp(0)
-	, m_strFindName(_T(""))
+	, m_iDrawID(0)
 {
 
 }
@@ -30,200 +29,25 @@ CUnittool::~CUnittool()
 void CUnittool::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT1, m_strTest);
-	DDX_Text(pDX, IDC_EDIT2, m_strResult);
-	DDX_Text(pDX, IDC_EDIT3, m_strName);
+
+	DDX_Control(pDX, IDC_BUTTON1, m_BitMap);
+	DDX_Text(pDX, IDC_EDIT3, m_strUnitName);
 	DDX_Text(pDX, IDC_EDIT4, m_iAttack);
 	DDX_Text(pDX, IDC_EDIT5, m_iHp);
-	DDX_Control(pDX, IDC_LIST1, m_ListBox);
-	DDX_Control(pDX, IDC_RADIO1, m_Radio[0]);
-	DDX_Control(pDX, IDC_RADIO2, m_Radio[1]);
-	DDX_Control(pDX, IDC_RADIO3, m_Radio[2]);
-
-	DDX_Control(pDX, IDC_CHECK1, m_Check[0]);
-	DDX_Control(pDX, IDC_CHECK2, m_Check[1]);
-	DDX_Control(pDX, IDC_CHECK3, m_Check[2]);
-	DDX_Control(pDX, IDC_BUTTON4, m_Bitmap);
-	DDX_Text(pDX, IDC_EDIT6, m_strFindName);
+	DDX_Control(pDX, IDC_LIST3, m_ListBox);
+	DDX_Control(pDX, IDC_PICTURE, m_Picture);
 }
 
 
 BEGIN_MESSAGE_MAP(CUnittool, CDialog)
-	ON_BN_CLICKED(IDC_BUTTON1, &CUnittool::OnBnClickedButton1)
-	ON_LBN_SELCHANGE(IDC_LIST1, &CUnittool::OnListBox)
-	ON_BN_CLICKED(IDC_BUTTON2, &CUnittool::OnAdd)
+	
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(IDC_BUTTON3, &CUnittool::OnDelete)
-	ON_EN_CHANGE(IDC_EDIT6, &CUnittool::OnSearch)
-	ON_BN_CLICKED(IDC_BUTTON5, &CUnittool::OnSave)
-	ON_BN_CLICKED(IDC_BUTTON6, &CUnittool::OnLoad)
+	ON_BN_CLICKED(IDC_BUTTON2, &CUnittool::OnSave)
+	ON_BN_CLICKED(IDC_BUTTON3, &CUnittool::OnLoad)
+	ON_WM_DROPFILES()
+	ON_LBN_SELCHANGE(IDC_LIST3, &CUnittool::OnListBox)
 END_MESSAGE_MAP()
 
-void CUnittool::OnBnClickedButton1()
-{
-	UpdateData(TRUE);			// 다이얼로그 박스로부터 입력된 값들을 얻어옴
-
-	m_strResult = m_strTest;
-
-	UpdateData(FALSE);			// 변수에 저장된 값들을 다이얼로그 박스에 반영
-}
-
-
-void CUnittool::OnListBox()
-{
-	UpdateData(TRUE);
-
-	CString		strFindName;
-
-	// GetCurSel : 리스트 박스 목록 중 선택된 셀의 인덱스를 반환
-	int	iIndex = m_ListBox.GetCurSel();
-
-	if (LB_ERR == iIndex)
-		return;
-
-	// GetText : 인덱스에 해당하는 셀의 문자열을 리스트 박스로부터 얻어옴
-	m_ListBox.GetText(iIndex, strFindName);
-
-	auto	iter = m_mapUnitData.find(strFindName);
-
-	if (iter == m_mapUnitData.end())
-		return;
-
-	m_strName = iter->second->strName;
-	m_iHp = iter->second->iHp;
-	m_iAttack = iter->second->iAttack;
-
-	for (int i = 0; i < 3; ++i)
-	{
-		m_Radio[i].SetCheck(FALSE);
-		m_Check[i].SetCheck(FALSE);
-	}
-
-	m_Radio[iter->second->byJobIndex].SetCheck(TRUE);
-
-	if (iter->second->byItem & RUBY)
-		m_Check[0].SetCheck(TRUE);
-
-	if (iter->second->byItem & DIAMOND)
-		m_Check[1].SetCheck(TRUE);
-
-	if (iter->second->byItem & SAPPHIRE)
-		m_Check[2].SetCheck(TRUE);
-
-
-
-	UpdateData(FALSE);
-}
-
-
-void CUnittool::OnAdd()
-{
-	UpdateData(TRUE);
-
-	UNITDATA* pUnit = new UNITDATA;
-
-	pUnit->strName = m_strName;
-	pUnit->iAttack = m_iAttack;
-	pUnit->iHp = m_iHp;
-
-	for (int i = 0; i < 3; ++i)
-	{
-		if (m_Radio[i].GetCheck())
-		{
-			pUnit->byJobIndex = i;
-			break;
-		}
-	}
-
-	pUnit->byItem = 0x00;
-
-	if (m_Check[0].GetCheck())
-		pUnit->byItem |= RUBY;
-
-	if (m_Check[1].GetCheck())
-		pUnit->byItem |= DIAMOND;
-
-	if (m_Check[2].GetCheck())
-		pUnit->byItem |= SAPPHIRE;
-
-
-	//AddString : 리스트 박스 목록으로 매개 변수에 해당하는 문자열을 추가
-	m_ListBox.AddString(pUnit->strName);
-
-	m_mapUnitData.insert({ pUnit->strName, pUnit });
-
-	UpdateData(FALSE);
-}
-
-void CUnittool::OnSearch()
-{
-	UpdateData(TRUE);
-
-	auto& iter = m_mapUnitData.find(m_strFindName);
-
-	if (iter == m_mapUnitData.end())
-		return;
-
-	// FindString : 0번 인덱스로 부터 해당 문자열의 목록을 찾아 해당 셀 인덱스를 반환
-	int iIndex = m_ListBox.FindString(0, m_strFindName);
-
-	if (LB_ERR == iIndex)
-		return;
-
-	m_ListBox.SetCurSel(iIndex);
-
-	m_strName = iter->second->strName;
-	m_iHp = iter->second->iHp;
-	m_iAttack = iter->second->iAttack;
-
-	for (int i = 0; i < 3; ++i)
-	{
-		m_Radio[i].SetCheck(FALSE);
-		m_Check[i].SetCheck(FALSE);
-	}
-
-	m_Radio[iter->second->byJobIndex].SetCheck(TRUE);
-
-	if (iter->second->byItem & RUBY)
-		m_Check[0].SetCheck(TRUE);
-
-	if (iter->second->byItem & DIAMOND)
-		m_Check[1].SetCheck(TRUE);
-
-	if (iter->second->byItem & SAPPHIRE)
-		m_Check[2].SetCheck(TRUE);
-
-	UpdateData(FALSE);
-
-}
-
-void CUnittool::OnDelete()
-{
-	UpdateData(TRUE);
-
-	CString	strFindName = L"";
-
-	int		iIndex = m_ListBox.GetCurSel();
-
-	if (LB_ERR == iIndex)
-		return;
-
-	m_ListBox.GetText(iIndex, strFindName);
-
-	auto& iter = m_mapUnitData.find(strFindName);
-
-	if (iter == m_mapUnitData.end())
-		return;
-
-	Safe_Delete(iter->second);
-	m_mapUnitData.erase(strFindName);
-
-	//DeleteString : 해당 목록의 문자열을 삭제
-	m_ListBox.DeleteString(iIndex);
-
-
-	UpdateData(FALSE);
-}
 
 void CUnittool::OnDestroy()
 {
@@ -246,10 +70,11 @@ BOOL CUnittool::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	HBITMAP	hBitmap = (HBITMAP)LoadImage(nullptr, L"../Texture/JusinLogo1.bmp", IMAGE_BITMAP, 100, 50, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	HBITMAP	hBitmap = (HBITMAP)LoadImage(nullptr, 
+		L"../Texture/JusinLogo1.bmp", 
+		IMAGE_BITMAP, 170, 150, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 
-	m_Bitmap.SetBitmap(hBitmap);
-
+	m_BitMap.SetBitmap(hBitmap);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -356,7 +181,7 @@ void CUnittool::OnLoad()
 		m_mapUnitData.clear();
 
 		// ResetContent : 리스트 박스 목록 초기화 함수
-		m_ListBox.ResetContent();
+		//m_ListBox.ResetContent();
 
 		CString	str = Dlg.GetPathName().GetString();
 		const TCHAR* pGetPath = str.GetString();
@@ -407,10 +232,89 @@ void CUnittool::OnLoad()
 
 			m_mapUnitData.insert({ pUnit->strName, pUnit });
 
-			m_ListBox.AddString(pUnit->strName);
+			//m_ListBox.AddString(pUnit->strName);
 		}
 		CloseHandle(hFile);
 	}
+
+	UpdateData(FALSE);
+}
+
+
+void CUnittool::OnDropFiles(HDROP hDropInfo)
+{
+	UpdateData(TRUE);
+
+	CDialog::OnDropFiles(hDropInfo);
+
+	TCHAR	szFilePath[MAX_PATH] = L"";
+	int iFileCnt = DragQueryFile(hDropInfo, 0xffffffff, nullptr, 0);
+	TCHAR		szFileName[MAX_STR] = L"";
+
+
+	for (int i = 0; i < iFileCnt; ++i)
+	{
+		DragQueryFile(hDropInfo, i, szFilePath, MAX_PATH);
+
+		CString strRelativePath = CFileInfo::ConvertRealtivePath(szFilePath);
+		CString	strFileName = PathFindFileName(strRelativePath);
+
+		lstrcpy(szFileName, strFileName.GetString());
+
+		PathRemoveExtension(szFileName);
+
+		strFileName = szFileName;
+
+		auto iter = m_MapPngImage.find(strFileName);
+
+		if (iter == m_MapPngImage.end())
+		{
+			CImage* pPngImg = new CImage;
+
+			pPngImg->Load(strRelativePath);
+
+			m_MapPngImage.insert({ strFileName, pPngImg });
+
+			m_ListBox.AddString(strFileName);
+		}
+	}
+	UpdateData(FALSE);
+	CDialog::OnDropFiles(hDropInfo);
+}
+
+
+void CUnittool::OnListBox()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CString	strFindName = L"";
+
+	int		iIndex = m_ListBox.GetCurSel();
+
+	if (LB_ERR == iIndex)
+		return;
+
+	m_ListBox.GetText(iIndex, strFindName);
+
+	auto	iter = m_MapPngImage.find(strFindName);
+
+	if (iter == m_MapPngImage.end())
+		return;
+
+	m_Picture.SetBitmap(*(iter->second));
+
+	int i(0);
+
+	for (; i < strFindName.GetLength(); ++i)
+	{
+		if (0 != isdigit(strFindName[i]))
+			break;
+	}
+
+	strFindName.Delete(0, i);
+
+	m_iDrawID = _tstoi(strFindName);
 
 	UpdateData(FALSE);
 }

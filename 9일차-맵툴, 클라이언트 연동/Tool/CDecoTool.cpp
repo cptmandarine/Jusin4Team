@@ -13,7 +13,7 @@
 IMPLEMENT_DYNAMIC(CDecoTool, CDialog)
 
 CDecoTool::CDecoTool(CWnd* pParent /*=nullptr*/)
-	: CDialog(IDD_CDecoTool, pParent), m_iDrawID(0)
+	: CDialog(IDD_CDecoTool, pParent), m_iDrawID(-1)
 	, m_strIndex(_T(""))
 {
 
@@ -143,10 +143,12 @@ void CDecoTool::OnListBox()
 	UpdateData(FALSE);
 }
 
-void CDecoTool::Add_ControlList(CONST TCHAR* str)
+void CDecoTool::Add_ControlList(wstring wstr)
 {
+	if (!m_ControllistBox.m_hWnd) return;
+
 	UpdateData(TRUE);
-	m_ControllistBox.AddString(str);
+	m_ControllistBox.AddString(wstr.c_str());
 	UpdateData(FALSE);
 }
 
