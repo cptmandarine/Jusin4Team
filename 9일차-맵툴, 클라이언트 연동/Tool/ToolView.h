@@ -7,6 +7,7 @@
 #include "CDevice.h"
 #include "CTextureMgr.h"
 #include "CTerrain.h"
+#include "CDeco.h"
 
 class CToolDoc;
 class CToolView : public CScrollView
@@ -50,6 +51,7 @@ public:
 
 public:
 	CTerrain* m_pTerrain;
+	CDeco* m_pDeco;
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

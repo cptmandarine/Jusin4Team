@@ -198,6 +198,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CBackGroundTool.h" />
+    <ClInclude Include="CDeco.h" />
+    <ClInclude Include="CDecoTool.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CDlgTab1.h" />
     <ClInclude Include="CDlgTab2.h" />
@@ -224,6 +226,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CBackGroundTool.cpp" />
+    <ClCompile Include="CDeco.cpp" />
+    <ClCompile Include="CDecoTool.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CDlgTab1.cpp" />
     <ClCompile Include="CDlgTab2.cpp" />

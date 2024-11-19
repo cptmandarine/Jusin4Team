@@ -31,6 +31,13 @@ typedef struct tagTile
 
 }TILE;
 
+typedef struct tagDeco
+{
+	D3DXVECTOR3	vPos;
+	int	 byIndex;
+	BYTE byDrawID;
+}DECO;
+
 typedef	struct tagUnitData
 {
 #ifdef _AFX

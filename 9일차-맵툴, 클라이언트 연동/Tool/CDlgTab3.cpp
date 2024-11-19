@@ -28,7 +28,18 @@ void CDlgTab3::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CDlgTab3, CDialogEx)
+	ON_BN_CLICKED(IDC_BUTTON1, &CDlgTab3::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
 // CDlgTab3 메시지 처리기
+
+
+void CDlgTab3::OnBnClickedButton1()
+{
+	if (nullptr == m_PathFinder.GetSafeHwnd())
+	{
+		m_PathFinder.Create(IDD_CPathFinder);
+	}
+	m_PathFinder.ShowWindow(SW_SHOW);
+}

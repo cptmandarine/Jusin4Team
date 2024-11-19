@@ -2,6 +2,7 @@
 #include "afxdialogex.h"
 #include "CMapTool.h"
 #include "CBackGroundTool.h"
+#include "CDecoTool.h"
 // CDlgTab1 대화 상자
 
 class CDlgTab1 : public CDialogEx
@@ -19,6 +20,7 @@ public:
 public:
 	CMapTool m_MapTool;
 	CBackGroundTool m_BGTool;
+	CDecoTool m_DecoTool;
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
@@ -26,4 +28,5 @@ protected:
 public:
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton3();
 };

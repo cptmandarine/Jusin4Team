@@ -11,7 +11,7 @@ public:
 
 public:
 	vector<TILE*>& Get_VecTile() { return m_vecTile; }
-
+	D3DXVECTOR3 Get_VecPos(int _idx) { return m_vecTile[_idx]->vPos; };
 public:
 	void		Set_MainView(CToolView* pMainView) { m_pMainView = pMainView; }
 	void		Set_Ratio(D3DXMATRIX* pOut, float fRatioX, float fRatioY);

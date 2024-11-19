@@ -46,27 +46,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
-
-	//if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-	//	!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
-	//{
-	//	TRACE0("도구 모음을 만들지 못했습니다.\n");
-	//	return -1;      // 만들지 못했습니다.
-	//}
-
-	//if (!m_wndStatusBar.Create(this))
-	//{
-	//	TRACE0("상태 표시줄을 만들지 못했습니다.\n");
-	//	return -1;      // 만들지 못했습니다.
-	//}
-	//m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
-
-	//// TODO: 도구 모음을 도킹할 수 없게 하려면 이 세 줄을 삭제하십시오.
-	//m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
-	//EnableDocking(CBRS_ALIGN_ANY);
-	//DockControlBar(&m_wndToolBar);
-
-
 	return 0;
 }
 
@@ -101,24 +80,6 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 {
-	// CreateStatic : 분할 창을 만드는 함수
-	// CreateStatic(부모 윈도우 주소, 행의 수, 열의 수, 창 스타일, 자식창 ID)
-
-	// m_MainSplitter.CreateStatic(this, 1, 2);
-
-	// CreateView : 분할 창에 표시할 VIEW 창을 만드는 함수
-	// CreateView(배치할 행, 배치할 열, 배치할 VIEW 창을 새로 생성, 초기 크기, pContext)
-
-	// m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMyForm), CSize(300, WINCY), pContext);
-	// m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CToolView), CSize(WINCX, WINCY), pContext);
-
-	// m_MainSplitter.CreateStatic(this, 2, 2);
-	// 
-	// m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMiniView), CSize(300, 300), pContext);
-	// m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyForm), CSize(300, 300), pContext);
-	// m_MainSplitter.CreateView(1, 0, RUNTIME_CLASS(CMyForm), CSize(300, 300), pContext);
-	// m_MainSplitter.CreateView(1, 1, RUNTIME_CLASS(CToolView), CSize(WINCX, WINCY), pContext);
-	
 	m_MainSplitter.CreateStatic(this, 1, 2);
 	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CToolView), CSize(WINCX, WINCY), pContext);
 

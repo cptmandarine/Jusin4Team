@@ -70,8 +70,14 @@
     <Filter Include="05. Dialog\00. MyForm\Tab">
       <UniqueIdentifier>{516e9886-0a6c-4c36-8a52-cdbc933151c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. Dialog\00. MyForm\05. BackGroundTool">
+    <Filter Include="04. Etc\Deco">
+      <UniqueIdentifier>{ee86d08f-ff64-4c93-8244-bfd610d3f844}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Dialog\05. BackGroundTool">
       <UniqueIdentifier>{2abdc170-15e0-424e-b803-2fe2c966b1f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Dialog\06.DecoTool">
+      <UniqueIdentifier>{dee3aac5-08e7-4dfc-8f87-ef2c71032540}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +151,13 @@
       <Filter>05. Dialog\00. MyForm\Tab</Filter>
     </ClInclude>
     <ClInclude Include="CBackGroundTool.h">
-      <Filter>05. Dialog\00. MyForm\05. BackGroundTool</Filter>
+      <Filter>05. Dialog\05. BackGroundTool</Filter>
+    </ClInclude>
+    <ClInclude Include="CDeco.h">
+      <Filter>04. Etc\Deco</Filter>
+    </ClInclude>
+    <ClInclude Include="CDecoTool.h">
+      <Filter>05. Dialog\06.DecoTool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -210,7 +222,13 @@
       <Filter>05. Dialog\00. MyForm\Tab</Filter>
     </ClCompile>
     <ClCompile Include="CBackGroundTool.cpp">
-      <Filter>05. Dialog\00. MyForm\05. BackGroundTool</Filter>
+      <Filter>05. Dialog\05. BackGroundTool</Filter>
+    </ClCompile>
+    <ClCompile Include="CDeco.cpp">
+      <Filter>04. Etc\Deco</Filter>
+    </ClCompile>
+    <ClCompile Include="CDecoTool.cpp">
+      <Filter>05. Dialog\06.DecoTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

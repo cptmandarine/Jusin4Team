@@ -96,10 +96,15 @@ void CToolView::OnInitialUpdate()
 		AfxMessageBox(L"Device Create Failed");
 		return;
 	}		
-
 	m_pTerrain = new CTerrain;
 	m_pTerrain->Initialize();
 	m_pTerrain->Set_MainView(this);
+
+	m_pDeco = new CDeco;
+	m_pDeco->Initialize();
+	m_pDeco->Set_MainView(this);
+
+	
 }
 
 
@@ -115,7 +120,8 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	CDevice::Get_Instance()->Render_Begin();
 
 	m_pTerrain->Render();	
-		
+	m_pDeco->Render();
+
 	CDevice::Get_Instance()->Render_End();
 
 }
@@ -125,28 +131,6 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 
 	CScrollView::OnLButtonDown(nFlags, point);
-
-	//CMainFrame* pMainFrm = (CMainFrame*)AfxGetMainWnd();
-	//CMyForm* pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
-	//CMapTool* pMapTool = &(pMyForm->m_MapTool);
-
-
-	//m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)),
-	//	float(point.y + GetScrollPos(1)), 0.f),
-	//	pMapTool->m_iDrawID);
-
-	//// Invalidate : 윈도우에 WM_PAINT, WM_ERASEBKGND 메세지를 발생시킴. 이 때, On_Draw함수를 다시 호출
-
-	//// FALSE : WM_PAINT 메시지만 발생
-	//// TRUE : WM_PAINT, WM_ERASEBKGND 둘 다 발생
-
-	//Invalidate(FALSE);		
-
-	//CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
-
-	//pMiniView->Invalidate(FALSE);
-
-
 }
 
 
@@ -162,12 +146,34 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 		CMainFrame* pMainFrm = (CMainFrame*)AfxGetMainWnd();
 		CMyForm*	pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
 		CMapTool* pMapTool = &(pMyForm->Get_Dig1()->m_MapTool);
+		CDecoTool* pDecoTool = &(pMyForm->Get_Dig1()->m_DecoTool);
+		//크흠...
+		pDecoTool->Set_MainView(this);
 
+		pDecoTool->Set_pDeco(m_pDeco);
 
 		m_pTerrain->Tile_Change(D3DXVECTOR3(float(point.x + GetScrollPos(0)), 
 											float(point.y + GetScrollPos(1)),
 											0.f), 
 											pMapTool->m_iDrawID);
+
+
+		//m_pTerrain에서 타일의 인덱스를 불러와서
+		//m_pDeco로 전달..
+		int iIdx = m_pTerrain->Get_TileIndex(
+			D3DXVECTOR3(
+				float(point.x + GetScrollPos(0)),
+				float(point.y + GetScrollPos(1)),
+				0.f));
+
+		D3DXVECTOR3 vDecoPos = m_pTerrain->Get_VecPos(iIdx);
+		if (m_pDeco->Create_Deco(vDecoPos, pDecoTool->m_iDrawID, iIdx))
+		{
+			TCHAR szBuf[MAX_STR];
+			swprintf_s(szBuf, L"DECO%d-%d", pDecoTool->m_iDrawID, iIdx);
+			pDecoTool->Add_ControlList(szBuf);
+		}
+
 		Invalidate(FALSE);
 
 		CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
@@ -183,7 +189,7 @@ void CToolView::OnDestroy()
 	CScrollView::OnDestroy();
 
 	Safe_Delete(m_pTerrain);
-
+	Safe_Delete(m_pDeco);
 	CTextureMgr::Get_Instance()->Destroy_Instance();
 	CDevice::Get_Instance()->Destroy_Instance();
 }

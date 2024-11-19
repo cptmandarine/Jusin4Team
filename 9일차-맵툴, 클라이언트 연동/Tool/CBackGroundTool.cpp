@@ -56,6 +56,7 @@ void CBackGroundTool::Change_BackGround()
 	m_vecBGImg[iIdx]->StretchBlt(dc.m_hDC, 0, 0,
 		pictureRect.Width(), pictureRect.Height(),
 		0, 0, m_vecBGImg[iIdx]->GetWidth(), m_vecBGImg[iIdx]->GetHeight());
+	//아래거 적용하면 크기가 적용이 안됨
 	//m_Picture.SetBitmap(*(m_vecBGImg[iIdx]));
 }
 
