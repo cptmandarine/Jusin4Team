@@ -30,6 +30,7 @@ void CDlgTab1::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDlgTab1, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CDlgTab1::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CDlgTab1::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &CDlgTab1::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -54,4 +55,15 @@ void CDlgTab1::OnBnClickedButton2()
 		m_BGTool.Create(IDD_CBackGroundTool);
 	}
 	m_BGTool.ShowWindow(SW_SHOW);
+}
+
+
+void CDlgTab1::OnBnClickedButton3()
+{
+
+	if (nullptr == m_DecoTool.GetSafeHwnd())
+	{
+		m_DecoTool.Create(IDD_CDecoTool);
+	}
+	m_DecoTool.ShowWindow(SW_SHOW);
 }

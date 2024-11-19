@@ -26,9 +26,6 @@ void CMyForm::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CMyForm, CFormView)
-	/*ON_BN_CLICKED(IDC_BUTTON1, &CMyForm::OnUnittool)
-	ON_BN_CLICKED(IDC_BUTTON7, &CMyForm::OnMapTool)
-	ON_BN_CLICKED(IDC_BUTTON2, &CMyForm::OnPathFinder)*/
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMyForm::OnSelchangeTab1)
 END_MESSAGE_MAP()
 
@@ -76,41 +73,17 @@ void CMyForm::OnInitialUpdate()
 		m_dlg2->Create(IDD_DIALOG_TAB2, &m_tab);
 
 	m_dlg2->MoveWindow(10, 40, rect.Width(), rect.Height());
-	m_dlg2->ShowWindow(SW_SHOW);
+	m_dlg2->ShowWindow(SW_HIDE);
 
 	m_dlg3 = new CDlgTab3;
 	if (nullptr == m_dlg3->GetSafeHwnd())
 		m_dlg3->Create(IDD_DIALOG_TAB3, &m_tab);
 
 	m_dlg3->MoveWindow(10, 40, rect.Width(), rect.Height());
-	m_dlg3->ShowWindow(SW_SHOW);
+	m_dlg3->ShowWindow(SW_HIDE);
 
-	m_Font.CreatePointFont(180, L"궁서");
-
-	/*GetDlgItem(IDC_BUTTON1)->SetFont(&m_Font);
-	GetDlgItem(IDC_BUTTON7)->SetFont(&m_Font);
-	GetDlgItem(IDC_BUTTON2)->SetFont(&m_Font);*/
+	
 }
-
-//void CMyForm::OnUnittool()
-//{
-//	// GetSafeHwnd : 현재 다이얼로그 윈도우 핸들을 반환
-//
-//	if(nullptr == m_UnitTool.GetSafeHwnd())
-//		m_UnitTool.Create(IDD_CUnittool);
-//
-//	m_UnitTool.ShowWindow(SW_SHOW);
-//}
-
-//void CMyForm::OnPathFinder()
-//{
-//	if (nullptr == m_PathFinder.GetSafeHwnd())
-//	{
-//		m_PathFinder.Create(IDD_CPathFinder);
-//	}
-//
-//	m_PathFinder.ShowWindow(SW_SHOW);
-//}
 
 
 void CMyForm::OnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult)
