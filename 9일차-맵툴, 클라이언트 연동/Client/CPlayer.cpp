@@ -17,12 +17,12 @@ HRESULT CPlayer::Initialize(void)
 {
 	m_bRight = true;
 	m_tFrame.iFrameStart = 0;
-	m_tFrame.iFrameEnd = 11;
+	m_tFrame.iFrameEnd = 6;
 	m_tFrame.ullTime = GetTickCount64();
 	m_tFrame.ullSpeed = 100;
 
 	m_pObjKey = L"Player";
-	m_pFrameKey = L"Stand";
+	m_pFrameKey = L"Stand_D";
 
 	m_eCurState = CPlayer::STAND;
 	m_tInfo.vPos = { WINCX * 0.5f, WINCY * 0.5f, 0.f };
@@ -31,6 +31,7 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
+	/*
 	if (GetAsyncKeyState(VK_RIGHT))
 	{
 		m_bRight = true;
@@ -46,7 +47,7 @@ int CPlayer::Update(void)
 	else
 	{
 		m_eCurState = CPlayer::STAND;
-	}
+	}*/
 	return 0;
 }
 
@@ -61,8 +62,8 @@ void CPlayer::Render(void)
 	D3DXMATRIX		matWorld, matScale, matTrans;
 
 	D3DXMatrixIdentity(&matWorld);
-	if(m_bRight) D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
-	else D3DXMatrixScaling(&matScale, -1.f, 1.f, 1.f);
+	if(m_bRight) D3DXMatrixScaling(&matScale, -1.f, 1.f, 1.f);
+	else D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
 
 	matWorld = matScale * matTrans;
@@ -94,19 +95,48 @@ void CPlayer::Motion_Change()
 		{
 		case CPlayer::STAND:
 			m_tFrame.iFrameStart = 0;
-			m_tFrame.iFrameEnd = 11;
+			m_tFrame.iFrameEnd = 6;
 			m_tFrame.ullTime = GetTickCount64();
 			m_tFrame.ullSpeed = 100;
-			m_pFrameKey = L"Stand";
+			m_pFrameKey = L"Stand_D";
 			m_pObjKey = L"Player";
+			m_bRight = false;
 			break;
-		case CPlayer::WALK:
-			m_tFrame.iFrameStart = 1;
-			m_tFrame.iFrameEnd = 12;
+		case CPlayer::WALK_LD:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 9;
 			m_tFrame.ullTime = GetTickCount64();
 			m_tFrame.ullSpeed = 100;
-			m_pFrameKey = L"Walk";
+			m_pFrameKey = L"Walk_LD";
 			m_pObjKey = L"Player";
+			m_bRight = false;
+			break;
+		case CPlayer::WALK_LU:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 9;
+			m_tFrame.ullTime = GetTickCount64();
+			m_tFrame.ullSpeed = 100;
+			m_pFrameKey = L"Walk_LU";
+			m_pObjKey = L"Player";
+			m_bRight = false;
+			break;
+		case CPlayer::WALK_RD:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 9;
+			m_tFrame.ullTime = GetTickCount64();
+			m_tFrame.ullSpeed = 100;
+			m_pFrameKey = L"Walk_LD";
+			m_pObjKey = L"Player";
+			m_bRight = true;
+			break;
+		case CPlayer::WALK_RU:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 9;
+			m_tFrame.ullTime = GetTickCount64();
+			m_tFrame.ullSpeed = 100;
+			m_pFrameKey = L"Walk_LU";
+			m_pObjKey = L"Player";
+			m_bRight = true;
 			break;
 		case CPlayer::END:
 			break;
@@ -115,4 +145,55 @@ void CPlayer::Motion_Change()
 		}
 		m_ePreState = m_eCurState;
 	}
+}
+
+void CPlayer::Move_Route()
+{
+	//list<TILE>& BestList = CAstarMgr::Get_Instance()->Get_BestList();
+
+	//if (!BestList.empty())
+	//{
+	//	D3DXVECTOR3        vDir = BestList.front()->vPos - m_tInfo.vPos;
+	//
+	//	if (vDir.x < 0) // Left
+	//	{
+	//		if (vDir.y > 0) // UP
+	//		{
+	//			m_eCurState = WALK_LU;
+	//		}
+	//	
+	//		else if (vDir.y < 0) // DOWN
+	//		{
+	//			m_eCurState = WALK_LD;
+	//		}
+	//	}
+	//
+	//	else if (vDir.x < 0) // RIGHT
+	//	{
+	//		if (vDir.y > 0) // UP
+	//		{
+	//			m_eCurState = WALK_RU;
+	//		}
+	//
+	//		else if (vDir.y < 0) // DOWN
+	//		{
+	//			m_eCurState = WALK_RD;
+	//		}
+	//	}
+	//
+	//	float    fDistance = D3DXVec3Length(&vDir);
+	//	D3DXVec3Normalize(&vDir, &vDir);
+	//
+	//	m_tInfo.vPos += vDir * CTimeMgr::Get_Instance()->Get_TimeDelta() * 300.f;
+	//
+	//	if (3.f >= fDistance)
+	//		BestList.pop_front();
+	//
+	//}
+	//
+	//else
+	//{
+	//	m_eCurState = STAND;
+	//	return;
+	//}
 }

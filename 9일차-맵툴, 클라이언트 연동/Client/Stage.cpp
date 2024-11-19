@@ -25,19 +25,30 @@ HRESULT CStage::Ready_Scene()
 	}
 
 	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
-		L"../Texture/Stage/Player/Stand/AKIHA_AKI00_00%d.png",
-		TEX_MULTI, L"Player", L"Stand", 12)))
+		L"../Texture/Player/Stand_D/Stand_D%d.png",
+		TEX_MULTI, L"Player", L"Stand_D", 7)))
 	{
 		ERR_MSG(L"Tile Img Insert Failed");
 		return E_FAIL;
 	}
+
 	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
-		L"../Texture/Stage/Player/Walk/AKIHA_AKI26_00%d.png",
-		TEX_MULTI, L"Player", L"Walk", 13)))
+		L"../Texture/Player/Walk_LD/Walk_LD%d.png",
+		TEX_MULTI, L"Player", L"Walk_LD", 10)))
 	{
 		ERR_MSG(L"Tile Img Insert Failed");
 		return E_FAIL;
 	}
+
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
+		L"../Texture/Player/Walk_LU/Walk_LU%d.png",
+		TEX_MULTI, L"Player", L"Walk_LU", 10)))
+	{
+		ERR_MSG(L"Tile Img Insert Failed");
+		return E_FAIL;
+	}
+
+
 	CObj*	pObj = new CMyTerrain;
 	
 	if (nullptr == pObj)

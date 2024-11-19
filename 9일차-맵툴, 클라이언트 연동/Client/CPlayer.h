@@ -6,7 +6,7 @@ public:
 	CPlayer();
 	virtual ~CPlayer();
 public:
-	enum PLAYERSTATE {STAND, WALK, END};
+	enum PLAYERSTATE { STAND, WALK_LU, WALK_LD, WALK_RU, WALK_RD, END };
 public:
 	// CObj을(를) 통해 상속됨
 	HRESULT Initialize(void) override;
@@ -16,6 +16,7 @@ public:
 	void Release(void) override;
 private:
 	void Motion_Change();
+	void Move_Route();
 private:
 	bool m_bRight;
 	CONST TCHAR* m_pObjKey;
