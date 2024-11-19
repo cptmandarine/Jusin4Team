@@ -31,7 +31,7 @@ public:
 public:
 	void Set_MainView(CToolView* pMainView) { m_pMainView = pMainView; }
 	void Set_pDeco(CDeco* _pDeco) { m_pDeco = _pDeco; };
-	void Add_ControlList(CONST TCHAR* _szElement);
+	void Add_ControlList(wstring _szElement);
 public:
 	//value
 	CString m_strIndex;
