@@ -17,7 +17,10 @@ CUnittool::CUnittool(CWnd* pParent /*=nullptr*/)
 	, m_strUnitName(_T(""))
 	, m_iAttack(0)
 	, m_iHp(0)
-	, m_iDrawID(0)
+	, m_iDrawID(-1)
+	, m_strOuput(_T(""))
+	, m_iOuputAttack(0)
+	, m_iOutputHP(0)
 {
 
 }
@@ -36,6 +39,10 @@ void CUnittool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT5, m_iHp);
 	DDX_Control(pDX, IDC_LIST3, m_ListBox);
 	DDX_Control(pDX, IDC_PICTURE, m_Picture);
+	DDX_Text(pDX, IDC_EDIT7, m_strOuput);
+	DDX_Text(pDX, IDC_EDIT1, m_iOuputAttack);
+	DDX_Text(pDX, IDC_EDIT2, m_iOutputHP);
+	DDX_Control(pDX, IDC_LIST1, m_OuputListBox);
 }
 
 
@@ -46,6 +53,9 @@ BEGIN_MESSAGE_MAP(CUnittool, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON3, &CUnittool::OnLoad)
 	ON_WM_DROPFILES()
 	ON_LBN_SELCHANGE(IDC_LIST3, &CUnittool::OnListBox)
+	ON_LBN_SELCHANGE(IDC_LIST1, &CUnittool::OnOuputListBox)
+	ON_BN_CLICKED(IDC_BUTTON11, &CUnittool::OnBnClickedButton11)
+	ON_BN_CLICKED(IDC_BUTTON10, &CUnittool::OnBnClickedButton10)
 END_MESSAGE_MAP()
 
 
@@ -132,13 +142,14 @@ void CUnittool::OnSave()
 		{
 			// key 값 저장
 			dwStrCnt = sizeof(TCHAR) * (MyPair.first.GetLength() + 1);
-
 			WriteFile(hFile, &dwStrCnt, sizeof(DWORD), &dwByte, nullptr);
 			WriteFile(hFile, MyPair.first.GetString(), dwStrCnt, &dwByte, nullptr);
 
+			dwStrCnt = sizeof(TCHAR) * (MyPair.second->strName.GetLength() + 1);
+			WriteFile(hFile, &dwStrCnt, sizeof(DWORD), &dwByte, nullptr);
+			WriteFile(hFile, MyPair.second->strName.GetString(), dwStrCnt, &dwByte, nullptr);
+
 			// value값 저장
-			WriteFile(hFile, &(MyPair.second->byItem),		sizeof(BYTE), &dwByte, nullptr);
-			WriteFile(hFile, &(MyPair.second->byJobIndex),	sizeof(BYTE), &dwByte, nullptr);
 			WriteFile(hFile, &(MyPair.second->iAttack),		sizeof(int), &dwByte, nullptr);
 			WriteFile(hFile, &(MyPair.second->iHp),			sizeof(int), &dwByte, nullptr);
 		}
@@ -181,7 +192,7 @@ void CUnittool::OnLoad()
 		m_mapUnitData.clear();
 
 		// ResetContent : 리스트 박스 목록 초기화 함수
-		//m_ListBox.ResetContent();
+		m_OuputListBox.ResetContent();
 
 		CString	str = Dlg.GetPathName().GetString();
 		const TCHAR* pGetPath = str.GetString();
@@ -203,18 +214,20 @@ void CUnittool::OnLoad()
 		{
 			// key
 			ReadFile(hFile, &dwStrCnt, sizeof(DWORD), &dwByte, nullptr);
+			TCHAR* pKey = new TCHAR[dwStrCnt];
+			ReadFile(hFile, pKey, dwStrCnt, &dwByte, nullptr);
 
+			ReadFile(hFile, &dwStrCnt, sizeof(DWORD), &dwByte, nullptr);
 			TCHAR* pName = new TCHAR[dwStrCnt];
 			ReadFile(hFile, pName, dwStrCnt, &dwByte, nullptr);
 
 			// value
-			ReadFile(hFile, &(tData.byItem), sizeof(BYTE), &dwByte, nullptr);
-			ReadFile(hFile, &(tData.byJobIndex), sizeof(BYTE), &dwByte, nullptr);
 			ReadFile(hFile, &(tData.iAttack), sizeof(int), &dwByte, nullptr);
 			ReadFile(hFile, &(tData.iHp), sizeof(int), &dwByte, nullptr);
 
 			if (0 == dwByte)
 			{
+				delete[] pKey;
 				delete[] pName;
 				break;
 			}
@@ -222,17 +235,20 @@ void CUnittool::OnLoad()
 			UNITDATA* pUnit = new UNITDATA;
 			pUnit->strName = pName;
 			
+			CString str = pKey;
+
+			delete[]pKey;
+			pKey = nullptr;
+
 			delete[]pName;
 			pName = nullptr;
 
-			pUnit->byItem = tData.byItem;
-			pUnit->byJobIndex = tData.byJobIndex;
 			pUnit->iAttack = tData.iAttack;
 			pUnit->iHp = tData.iHp;
 
-			m_mapUnitData.insert({ pUnit->strName, pUnit });
-
-			//m_ListBox.AddString(pUnit->strName);
+			m_mapUnitData.insert({ str, pUnit });
+			
+			m_OuputListBox.AddString(pUnit->strName);
 		}
 		CloseHandle(hFile);
 	}
@@ -304,17 +320,103 @@ void CUnittool::OnListBox()
 
 	m_Picture.SetBitmap(*(iter->second));
 
-	int i(0);
+	UpdateData(FALSE);
+}
 
-	for (; i < strFindName.GetLength(); ++i)
+
+void CUnittool::OnOuputListBox()
+{
+	UpdateData(TRUE);
+	//셀을 누름 정보, 해당 이미지 출력
+	int iIdx = m_OuputListBox.GetCurSel();
+	CString strFindName;
+
+	m_OuputListBox.GetText(iIdx, strFindName);
+	for (auto iter = m_mapUnitData.begin(); iter != m_mapUnitData.end(); ++iter)
 	{
-		if (0 != isdigit(strFindName[i]))
+		if (iter->second->strName == strFindName)
+		{
+			m_strOuput = iter->second->strName;
+			m_iOuputAttack = iter->second->iAttack;
+			m_iOutputHP = iter->second->iHp;
+
+			auto imageIter = m_MapPngImage.find(iter->first);
+
+			if (imageIter == m_MapPngImage.end()) return;
+
+			m_Picture.SetBitmap(*(imageIter->second));
+
+			//설정
+			int i(0);
+			CString strKey = iter->first;
+			for (; i < strKey.GetLength(); ++i)
+			{
+				if (0 != isdigit(strKey[i]))
+					break;
+			}
+
+			strKey.Delete(0, i);
+
+			m_iDrawID = _tstoi(strKey);
 			break;
+		}
 	}
+	UpdateData(FALSE);
+}
 
-	strFindName.Delete(0, i);
+//ADD
+void CUnittool::OnBnClickedButton11()
+{
+	UpdateData(TRUE);
+	
+	UNITDATA* newData = new UNITDATA;
+	newData->strName = m_strUnitName;
+	newData->iAttack = m_iAttack;
+	newData->iHp = m_iHp;
 
-	m_iDrawID = _tstoi(strFindName);
+	CString	strFindName = L"";
+
+	int		iIndex = m_ListBox.GetCurSel();
+
+	if (LB_ERR == iIndex)
+		return;
+
+	m_ListBox.GetText(iIndex, strFindName);
+	auto iter = m_mapUnitData.find(strFindName);
+	if (iter != m_mapUnitData.end()) return;
+
+	m_mapUnitData.insert({ strFindName, newData });
+	m_OuputListBox.AddString(m_strUnitName);
+	UpdateData(FALSE);
+}
+
+//DELETE
+void CUnittool::OnBnClickedButton10()
+{
+	UpdateData(TRUE);
+	
+	CString	strFindName = L"";
+
+	int		iIndex = m_OuputListBox.GetCurSel();
+
+	if (LB_ERR == iIndex)
+		return;
+
+	m_OuputListBox.GetText(iIndex, strFindName);
+
+	for (auto iter = m_mapUnitData.begin(); iter != m_mapUnitData.end(); ++iter)
+	{
+		if (iter->second->strName == strFindName)
+		{
+			m_OuputListBox.DeleteString(iIndex);
+			m_mapUnitData.erase(iter);
+
+			m_strOuput = L"";
+			m_iOutputHP = 0;
+			m_iOuputAttack = 0;
+			break;
+		}
+	}
 
 	UpdateData(FALSE);
 }

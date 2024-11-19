@@ -48,8 +48,6 @@ typedef	struct tagUnitData
 
 	int		iHp;
 	int		iAttack;
-	BYTE	byJobIndex;
-	BYTE	byItem;
 
 }UNITDATA;
 
