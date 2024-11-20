@@ -17,10 +17,24 @@ CStage::~CStage()
 HRESULT CStage::Ready_Scene()
 {
 	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
-		L"../Texture/Stage/Terrain/Tile/Tile%d.png", 
-		TEX_MULTI, L"Terrain", L"Tile", 36)))
+		L"../Texture/Map/Map%d.png",
+		TEX_MULTI, L"BackGround", L"Map", 6)))
+	{
+		ERR_MSG(L"BG Img Insert Failed");
+		return E_FAIL;
+	}
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
+		L"../Texture/Tile/Tile%d.png", 
+		TEX_MULTI, L"Terrain", L"Tile", 5)))
 	{
 		ERR_MSG(L"Tile Img Insert Failed");
+		return E_FAIL;
+	}
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(
+		L"../Texture/Object/Deco/Deco%d.png",
+		TEX_MULTI, L"Object", L"Deco", 35)))
+	{
+		ERR_MSG(L"Deco Img Insert Failed");
 		return E_FAIL;
 	}
 

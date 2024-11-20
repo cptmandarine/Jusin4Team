@@ -48,4 +48,5 @@ public:
 public:
 	CToolView* m_pMainView;
 	afx_msg void OnBnClickedButton9();
+	afx_msg void OnBnClickedButton1();
 };

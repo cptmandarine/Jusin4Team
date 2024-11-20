@@ -182,6 +182,9 @@ void CTerrain::Initialize()
 			pTile->byOption = 0;
 			pTile->byDrawID = 0;
 
+			pTile->iIndex = i * TILEX + j;
+			pTile->iParentIdx = -1;
+
 			m_vecTile.push_back(pTile);
 		}
 	}

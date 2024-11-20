@@ -3,7 +3,7 @@
 #include "CDevice.h"
 #include "CTextureMgr.h"
 #include "TimeMgr.h"
-
+#include "CMyAstarMgr.h"
 CPlayer::CPlayer()
 {
 }
@@ -25,29 +25,29 @@ HRESULT CPlayer::Initialize(void)
 	m_pFrameKey = L"Stand_D";
 
 	m_eCurState = CPlayer::STAND;
-	m_tInfo.vPos = { WINCX * 0.5f, WINCY * 0.5f, 0.f };
+	m_tInfo.vPos = { 611.f, 552.f, 0.f };
 	return S_OK;
 }
 
 int CPlayer::Update(void)
 {
-	/*
-	if (GetAsyncKeyState(VK_RIGHT))
+	if (GetAsyncKeyState(VK_LBUTTON))
 	{
-		m_bRight = true;
-		m_tInfo.vPos.x += (300.f * CTimeMgr::Get_Instance()->Get_TimeDelta());
-		m_eCurState = CPlayer::WALK;
+		CMyAstarMgr::Get_Instance()->Start_Astar(m_tInfo.vPos, Get_Mouse() - CObj::m_vScroll);
 	}
-	else if (GetAsyncKeyState(VK_LEFT))
-	{
-		m_bRight = false;
-		m_tInfo.vPos.x -= (300.f * CTimeMgr::Get_Instance()->Get_TimeDelta());
-		m_eCurState = CPlayer::WALK;
-	}
-	else
-	{
-		m_eCurState = CPlayer::STAND;
-	}*/
+	//Best길을 역추적
+	Move_Route();
+	D3DXMATRIX	matScale, matTrans;
+
+	if(m_bRight) D3DXMatrixScaling(&matScale, -1.f, 1.f, 1.f);
+	else D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+
+	D3DXMatrixTranslation(&matTrans,
+		m_tInfo.vPos.x + CObj::m_vScroll.x + TILECX /2,
+		m_tInfo.vPos.y + CObj::m_vScroll.y - TILECY / 2,
+		0.f);
+
+	m_tInfo.matWorld = matScale * matTrans;
 	return 0;
 }
 
@@ -59,16 +59,9 @@ void CPlayer::Late_Update(void)
 
 void CPlayer::Render(void)
 {
-	D3DXMATRIX		matWorld, matScale, matTrans;
+	
 
-	D3DXMatrixIdentity(&matWorld);
-	if(m_bRight) D3DXMatrixScaling(&matScale, -1.f, 1.f, 1.f);
-	else D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
-	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
-
-	matWorld = matScale * matTrans;
-
-	CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+	CDevice::Get_Instance()->Get_Sprite()->SetTransform(&m_tInfo.matWorld);
 
 	const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_pObjKey, m_pFrameKey, m_tFrame.iFrameStart);
 
@@ -149,51 +142,58 @@ void CPlayer::Motion_Change()
 
 void CPlayer::Move_Route()
 {
-	//list<TILE>& BestList = CAstarMgr::Get_Instance()->Get_BestList();
+	list<TILE*>& BestList = CMyAstarMgr::Get_Instance()->Get_BestList();
 
-	//if (!BestList.empty())
-	//{
-	//	D3DXVECTOR3        vDir = BestList.front()->vPos - m_tInfo.vPos;
-	//
-	//	if (vDir.x < 0) // Left
-	//	{
-	//		if (vDir.y > 0) // UP
-	//		{
-	//			m_eCurState = WALK_LU;
-	//		}
-	//	
-	//		else if (vDir.y < 0) // DOWN
-	//		{
-	//			m_eCurState = WALK_LD;
-	//		}
-	//	}
-	//
-	//	else if (vDir.x < 0) // RIGHT
-	//	{
-	//		if (vDir.y > 0) // UP
-	//		{
-	//			m_eCurState = WALK_RU;
-	//		}
-	//
-	//		else if (vDir.y < 0) // DOWN
-	//		{
-	//			m_eCurState = WALK_RD;
-	//		}
-	//	}
-	//
-	//	float    fDistance = D3DXVec3Length(&vDir);
-	//	D3DXVec3Normalize(&vDir, &vDir);
-	//
-	//	m_tInfo.vPos += vDir * CTimeMgr::Get_Instance()->Get_TimeDelta() * 300.f;
-	//
-	//	if (3.f >= fDistance)
-	//		BestList.pop_front();
-	//
-	//}
-	//
-	//else
-	//{
-	//	m_eCurState = STAND;
-	//	return;
-	//}
+	if (!BestList.empty())
+	{
+		int a = BestList.size();
+		
+		D3DXVECTOR3  vDir = (BestList.front()->vPos) - m_tInfo.vPos;
+	
+		
+
+		if (vDir.x < 0) // Left
+		{
+			if (vDir.y <0) // UP
+			{
+				m_eCurState = WALK_LU;
+			}
+		
+			else if (vDir.y > 0) // DOWN
+			{
+				m_eCurState = WALK_LD;
+			}
+		}
+	
+		else if (vDir.x > 0) // RIGHT
+		{
+			if (vDir.y < 0) // UP
+			{
+				m_eCurState = WALK_RU;
+			}
+	
+			else if (vDir.y > 0) // DOWN
+			{
+				m_eCurState = WALK_RD;
+			}
+		}
+	
+		float deltaSpeed = CTimeMgr::Get_Instance()->Get_TimeDelta() * 300.f;
+		float    fDistance = D3DXVec3Length(&vDir);
+		D3DXVec3Normalize(&vDir, &vDir);
+	
+		m_tInfo.vPos += (vDir * deltaSpeed);
+		if (deltaSpeed >= fDistance)
+		{
+			m_tInfo.vPos = (BestList.front()->vPos);
+			BestList.pop_front();
+		}
+	
+	}
+	
+	else
+	{
+		m_eCurState = STAND;
+		return;
+	}
 }
