@@ -6,7 +6,8 @@
 #include "afxdialogex.h"
 #include "CDecoTool.h"
 #include "CFileInfo.h"
-
+#include "ToolView.h"
+#include "MainFrm.h"
 
 // CDecoTool 대화 상자
 
@@ -40,6 +41,7 @@ BEGIN_MESSAGE_MAP(CDecoTool, CDialog)
 	ON_LBN_SELCHANGE(IDC_LIST1, &CDecoTool::OnControlListBox)
 	ON_BN_CLICKED(IDC_BUTTON7, &CDecoTool::OnBnClickedButton7)
 	ON_BN_CLICKED(IDC_BUTTON9, &CDecoTool::OnBnClickedButton9)
+	ON_BN_CLICKED(IDC_BUTTON1, &CDecoTool::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -236,4 +238,63 @@ void CDecoTool::OnBnClickedButton9()
 	}
 	if(m_pMainView) ((CView*)m_pMainView)->Invalidate(FALSE);
 	UpdateData(FALSE);
+}
+
+
+//데코 저장쓰
+void CDecoTool::OnBnClickedButton1()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CFileDialog	Dlg(FALSE,	// TRUE(불러오기), FALSE(다른 이름으로 저장)
+		L"dat",	// Default 파일 확장자명	
+		L"*.dat", // 대화 상자에 표시될 최초의 파일명
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, // OFN_HIDEREADONLY(읽기 전용 체크박스 숨김), OFN_OVERWRITEPROMPT(중복 파일 저장 시, 경고 메세지 띄움)
+		L"Data File(*.dat)|*.dat||",  // 대화 상자에 표시될 파일 형식 "콤보 박스에 출력될 문자열 | 실제 사용할 필터링 문자열"
+		this);	// 부모 윈도우 주소
+
+	TCHAR	szPath[MAX_PATH] = L"";
+
+	// GetCurrentDirectory : 현재 프로젝트의 경로를 얻어오는 함수
+	GetCurrentDirectory(MAX_PATH, szPath);
+
+	// PathRemoveFileSpec : 전체 경로 중 파일 이름만 잘라내는 함수
+	// 경로 상 파일 이름이 없는 상태라면 그중 맨 마지막 폴더명을 잘라냄
+	PathRemoveFileSpec(szPath);
+
+	lstrcat(szPath, L"\\Data");
+
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+
+	if (IDOK == Dlg.DoModal())
+	{
+		// GetPathName : 선택된 경로를 반환
+		// GetString : 원시 버퍼 형태의 자료값을 반환하는 함수
+		CString	str = Dlg.GetPathName().GetString();
+		const TCHAR* pGetPath = str.GetString();
+
+		HANDLE hFile = CreateFile(pGetPath,
+			GENERIC_WRITE,
+			0, 0,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL,
+			0);
+
+		if (INVALID_HANDLE_VALUE == hFile)
+			return;
+
+		CMainFrame* pMainFrm = (CMainFrame*)AfxGetMainWnd();
+		CToolView* pMainView = dynamic_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+		CDeco* pMyDeco = pMainView->m_pDeco;
+		vector<DECO*>& vecDeco = pMyDeco->Get_DecoVector();
+
+		if (vecDeco.empty())
+			return;
+
+		DWORD	dwByte(0);
+
+		for (auto& pDeco : vecDeco)
+			WriteFile(hFile, pDeco, sizeof(DECO), &dwByte, NULL);
+
+		CloseHandle(hFile);
+	}
 }
